@@ -1,0 +1,17 @@
+{
+  "name": "energy",
+  "app_id": "d930585e",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "proxies": [
+      {
+        "path": "/api",
+        "proxyUrl": "https://white-webservices.energieoptimierer.de/"
+      }],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
+}

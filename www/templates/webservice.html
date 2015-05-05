@@ -1,0 +1,21 @@
+<ion-view view-title="Webservice">
+    <ion-content>
+        <h1>WebService - Logo 1</h1>
+            <div ng-controller="WebserviceCtrl">
+                <span>{{data.length}}</span>
+
+                <ion-list>
+                    <ion-item ng-repeat="item in data" href="#/app/playlists/{{item.SupplierId}}">
+                        <img src="http://www.visionenergie.de/images/anbieter/{{item.LogoImageUrl | split:'/':4 }}" /> - {{item.Name}} -{{item.CodeNumber}}
+                    </ion-item>
+                </ion-list>
+
+
+            </div>
+        <!--<ion-list>-->
+            <!--<ion-item ng-repeat="result in results" href="#/app/webservice/">-->
+                <!--{{result.title}}-->
+            <!--</ion-item>-->
+        <!--</ion-list>-->
+    </ion-content>
+</ion-view>
