@@ -1,5 +1,42 @@
 <ion-view view-title="Search">
   <ion-content>
-    <h1>Search</h1>
+    <h1>Gas Search</h1>
+
+      <form ng-submit="doLogin()" ng-controller="SearchCtrl">
+        <div class="list">
+          <label class="item item-input ">
+            <span class="input-label">Postleitzahl</span>
+            <input type="text" ng-model="searchData.plz">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Gasverbrauch</span>
+            <input type="text" ng-model="searchData.usage">
+          </label>
+          <label class="item item-select">
+            <span class="input-label">Nutzung</span>
+            <select ng-model="searchData.client">
+              <option value="private">Privat</option>
+              <option value="commercial">Kommerziel</option>
+            </select>
+          </label>
+          <label class="item">
+            <span class="range-label">Gasverbrauch</span>
+            <div class="range">
+              <i class="icon ion-volume-low"></i>
+              <input type="range" name="volume">
+              <i class="icon ion-volume-high"></i>
+            </div>
+            <div class="button-bar">
+              <a class="button" ng-class="{'button-positive': isActive('breakfast')}" ng-click="setActive('breakfast')">Breakfast</a>
+              <a class="button" ng-class="{'button-positive': isActive('lunch')}" ng-click="setActive('lunch')">Lunch</a>
+              <a class="button" ng-class="{'button-positive': isActive('dinner')}" ng-click="setActive('dinner')">Dinner</a>
+            </div>
+          </label>
+
+          <label class="item">
+            <button class="button button-block button-positive" type="submit">Suchen</button>
+          </label>
+        </div>
+      </form>
   </ion-content>
 </ion-view>

@@ -31,6 +31,29 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
         }
       }
     }])
+
+    .controller('SearchCtrl', function($scope) {
+      $scope.playlists = [
+        { title: 'Test', id: 1 },
+        { title: 'Chill', id: 2 },
+        { title: 'Dubstep', id: 3 },
+        { title: 'Indie', id: 4 },
+        { title: 'Rap', id: 5 },
+        { title: 'Cowbell', id: 6 }
+      ];
+    })
+
+    .controller('LoadingCtrl', function($scope, $ionicLoading) {
+      $scope.show = function() {
+        $ionicLoading.show({
+          template: 'Loading...'
+        });
+      };
+      $scope.hide = function(){
+        $ionicLoading.hide();
+      };
+    })
+
     .filter('split', function() {
       return function(input, splitChar, splitIndex) {
         // do some bounds checking here to ensure it has that index
