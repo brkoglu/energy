@@ -32,7 +32,7 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
       }
     }])
 
-    .controller('SearchCtrl', function($scope) {
+    .controller('SearchCtrl', ['$scope', function($scope) {
       $scope.playlists = [
         { title: 'Test', id: 1 },
         { title: 'Chill', id: 2 },
@@ -41,18 +41,38 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
         { title: 'Rap', id: 5 },
         { title: 'Cowbell', id: 6 }
       ];
-    })
 
-    .controller('LoadingCtrl', function($scope, $ionicLoading) {
-      $scope.show = function() {
-        $ionicLoading.show({
-          template: 'Loading...'
-        });
+      $scope.range= {
+        min:0,
+        max:5000,
+        value:2500
       };
-      $scope.hide = function(){
-        $ionicLoading.hide();
+
+
+    }])
+
+    .controller('BarCtrl', ['$scope', function($scope) {
+      $scope.active = '2500';
+      $scope.setActive = function(type) {
+        $scope.range.value = type;
+        $scope.active = type;
       };
-    })
+      $scope.isActive = function(type) {
+        return type === $scope.active;
+
+      };
+    }])
+
+    //.controller('LoadingCtrl', function($scope, $ionicLoading) {
+    //  $scope.show = function() {
+    //    $ionicLoading.show({
+    //      template: 'Loading...'
+    //    });
+    //  };
+    //  $scope.hide = function(){
+    //    $ionicLoading.hide();
+    //  };
+    //})
 
     .filter('split', function() {
       return function(input, splitChar, splitIndex) {
