@@ -6,10 +6,11 @@
     "watch"
   ],
   "proxies": [
-      {
-        "path": "/api",
-        "proxyUrl": "https://white-webservices.energieoptimierer.de/"
-      }],
+    {
+      "path": "/api",
+      "proxyUrl": "https://white-webservices.energieoptimierer.de/"
+    }
+  ],
   "watchPatterns": [
     "www/**/*",
     "!www/lib/**/*"

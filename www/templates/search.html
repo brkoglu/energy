@@ -2,39 +2,66 @@
   <ion-content>
     <h1>Gas Search</h1>
 
-      <form ng-submit="doLogin()" ng-controller="SearchCtrl">
+      <form ng-submit="" ng-controller="MainFormCtrl">
         <div class="list">
-          <label class="item item-input ">
-            <span class="input-label">Postleitzahl</span>
-            <input type="text" ng-model="searchData.plz">
+          <label class="item item-input" >
+
+            <input type="tel" placeholder="Postleitzahl" ng-model="plz" min="1" max="5" ng-change="setPlz(plz)" />
+            <ion-spinner icon="android" ng-show="loader"></ion-spinner>
           </label>
-          <label class="item item-input">
-            <span class="input-label">Gasverbrauch</span>
-            <input type="text" ng-model="searchData.usage">
+          <label class="item item-input" ng-show="lbltown">
+            <span class="input-label">{{town}}</span>
           </label>
-          <label class="item item-select">
-            <span class="input-label">Nutzung</span>
-            <select ng-model="searchData.client">
-              <option value="private">Privat</option>
-              <option value="commercial">Kommerziel</option>
+
+          <label class="item item-input item-select" ng-show="lbltown">
+            <span class="input-label">Anbieter</span>
+            <select ng-model="filteredCompany.operator">
+              <option ng-selected="{{operator.value == filteredCompany.operator}}"
+                      ng-repeat="operator in operators"
+                      value="{{operator.SupplierId}}">
+                {{operator.Name}}
+              </option>
             </select>
           </label>
-          <label class="item">
-            <span class="range-label">Gasverbrauch</span>
-            <div class="range">
-              <i class="icon ion-volume-low"></i>
-              <input type="range" name="volume">
-              <i class="icon ion-volume-high"></i>
-            </div>
-            <div class="button-bar">
-              <a class="button" ng-class="{'button-positive': isActive('breakfast')}" ng-click="setActive('breakfast')">Breakfast</a>
-              <a class="button" ng-class="{'button-positive': isActive('lunch')}" ng-click="setActive('lunch')">Lunch</a>
-              <a class="button" ng-class="{'button-positive': isActive('dinner')}" ng-click="setActive('dinner')">Dinner</a>
-            </div>
+
+
+
+          <label class="item item-input item-select" ng-show="lbltown">
+            <span class="input-label">Tarif</span>
+            <select ng-model="filteredCompany.tariffId">
+              <option ng-repeat="operator in operators[0].Tariffs" value="{{operator.TariffId}}">
+                {{operator.Name}}
+              </option>
+            </select>
+          </label>
+
+          <label class="item item-input item-select">
+            <span class="input-label">Nutzung</span>
+            <select ng-model="client">
+              <option value="Private" selected>Private</option>
+              <option value="Private1">Gewerbe</option>
+            </select>
           </label>
 
           <label class="item">
-            <button class="button button-block button-positive" type="submit">Suchen</button>
+            <div class="item range range-positive" style="padding: 0px;" >
+              <!--<p style="display: block">Gasverbrauch</p>-->
+              <i class="icon ion-ios-flame-outline"></i>
+              <input type="range" min="0" max="5000" value="{{range.value}}" step="100" ng-model="range.value">
+              <i class="icon ion-ios-flame"></i> {{range.value}} kWh
+            </div>
+          </label>
+          <div class="button-bar" ng-controller="BarCtrl" style="">
+            <a class="button" ng-class="{'button-positive': range.value > 500 && range.value <= 1500 }" ng-click="setActive('1500')"><i class="icon ion-ios-body"></i></a>
+            <a class="button" ng-class="{'button-positive': range.value > 1500 && range.value <= 2500 }" ng-click="setActive('2500')"><i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i></a>
+            <a class="button" ng-class="{'button-positive': range.value > 2500 && range.value <= 3500 }" ng-click="setActive('3500')"><i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i></a>
+            <a class="button" ng-class="{'button-positive': range.value > 3500 && range.value <= 5000 }" ng-click="setActive('4500')"><i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i></a>
+          </div>
+
+
+
+          <label class="item" style="padding-left: 15px; padding-right: 15px">
+            <button class="button button-block button-positive" type="submit" >Suchen</button>
           </label>
         </div>
       </form>
