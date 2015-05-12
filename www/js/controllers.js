@@ -25,6 +25,23 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
                 "postalCode": plz
               });
         },
+        ListGlobalSuppliers: function( ){
+          return $soap.post(base_url + "/SwitchEnergySupplier.asmx","ListGlobalSuppliers",
+              {
+                "energyType": "Gas"
+              });
+        },
+        ListOfferedSuppliersWithDate: function(yearlyUsage, plz,energyType , customerType, townName, datum){
+          return $soap.post(base_url + "/SwitchEnergySupplier.asmx","ListOfferedSuppliersWithDate",
+              {
+                "yearlyUsage": yearlyUsage,
+                "postalCode": plz,
+                "energyType": energyType,
+                "customerType": customerType,
+                "townName" : townName,
+                "offeredDate" : datum
+              });
+        },
 
         // Mit logo
         ListOfferedSuppliers: function(){
@@ -46,11 +63,11 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
       $scope.client = "Private";
       $scope.lbltown = false;
 
-      $scope.filteredCompany={
-        operator: '',
-        tariffId: ''
-      };
-      $scope.operators = [];
+      $scope.operators= [];
+      $scope.selectedCompany = "";
+
+      $scope.date = new Date();
+      $scope.date.setDate($scope.date.getDate() - 1);
 
       $scope.setPlz = function(word){
         if (word.length == 5){
@@ -61,13 +78,19 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
               $scope.lbltown = true;
               $scope.town = response.toString();
 
+              $scope.getSearchResult();
+
               testService.ListDefaultSuppliers($scope.range.value.toString(), $scope.plz, "Gas",$scope.client, $scope.town).then(function(response){
                 console.log(response);
-                $scope.filteredCompany.operator = response[0].SupplierId;
-                $scope.filteredCompany.tariffId = response[0].Tariffs[0].TariffId;
                 $scope.operators = response;
+                $scope.selectedCompany = response[0];
+                $scope.selectedTariff = response[0].Tariffs[0];
 
-                $scope.loader = false;
+                testService.ListGlobalSuppliers().then(function(response){
+                  $scope.operators = $scope.operators.concat(response);
+                  $scope.loader = false;
+                });
+
               });
 
             }
@@ -79,33 +102,40 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
         }
       };
 
-
       $scope.range= {
         min:0,
         max:5000,
         value:2500
       };
+
+      $scope.getSearchResult = function() {
+
+        $scope.date = new Date();
+        $scope.date.setDate($scope.date.getDate() - 1);
+
+        if ($scope.plz.length == 5){
+          testService.ListOfferedSuppliersWithDate($scope.range.value.toString(), $scope.plz, "Gas",$scope.client, $scope.town, $scope.date).then(function(response){
+            $scope.searchResultCountsText = "(" + response.length + " Treffer)";
+            console.log(response);
+          });
+        }
+
+      };
+
+
+
     })
 
-    .controller('BarCtrl', ['$scope', function($scope) {
+    .controller('BarCtrl', function($scope, testService) {
       $scope.active = '2500';
       $scope.setActive = function(type) {
         $scope.range.value = type;
         $scope.active = type;
       };
 
-    }])
 
-    //.controller('LoadingCtrl', function($scope, $ionicLoading) {
-    //  $scope.show = function() {
-    //    $ionicLoading.show({
-    //      template: 'Loading...'
-    //    });
-    //  };
-    //  $scope.hide = function(){
-    //    $ionicLoading.hide();
-    //  };
-    //})
+
+    })
 
     .filter('split', function() {
       return function(input, splitChar, splitIndex) {
