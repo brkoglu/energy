@@ -1,0 +1,102 @@
+<ion-view view-title="Search Result">
+    <ion-content>
+        <ion-slide-box on-slide-changed="" show-pager="false">
+            <ion-slide ng-repeat="item in data[0]" href="#/app/results/{{item.SupplierId}}">
+                <div style="text-align: center">
+                    <div class="slide_header">
+                        <h3>Ersparnis:<br /><strong><span>110.23</span>€</strong></h3>
+                        <br />
+                    </div>
+                    <div class="slide_desc" id="div_desc">
+                        <p id="p_desc">Ihre Kosten bei Ihrem aktuellen Tarif <span>EWR GmbH</span> <span>294.53</span> EUR. <span>Sie Sparen mit {{item.Name}}</span><span>110.23 EUR im Jahr.</span></p>
+                    </div>
+                    <div>
+                        <img src="http://www.visionenergie.de/images/anbieter/{{item.LogoImageUrl | split:'/':4 }}" style="height:206px;width:206px;" />
+                    </div>
+                    <div class="slide_table">
+                        <span style="font-size:120%;font-weight:bold;"> {{item.Tariffs[0].Name}}</span>
+                        <table cellspacing="0" id="datenueberblick">
+                            <tbody>
+                            <tr>
+                                <th class="wt">Grundpreis</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_BaseCostLabel_0">13.90 EUR</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt">Arbeitspreis</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_UnitCostLabel_0">5.10 Cent</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt">Kosten Jahr</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_TotalCostPerYearLabel_0">294.30 EUR</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt">Laufzeit</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_MinContractLengthLabel_0">24 Monate</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt">Kündigung</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_MinPeriodToStopContractLabel_0">12 Wochen</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt">Zahlungsweise</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_PaymentPeriodLabel_0">monatlich</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt">Preisgarantie</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_PriceGuaranteeLabel_0">24 Monate</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_DepositLabel_0"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt">Gültig seit</th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_ValidFromLabel_0">03/04/2015</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt"></th>
+                                <td class="wt"></td>
+                            </tr>
+                            <tr>
+                                <th class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_AddonLabel_1_0">Willkommensbonus</span>
+                                </th>
+                                <td class="wt">
+                                    <span id="MiddlePaneContent_OfferedTariffsRepeater_TariffDetails1_0_AddonValue_1_0">110.00</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="wt"></th>
+                                <td class="wt"></td>
+                            </tr>
+                            <tr>
+                                <th class="wt"></th>
+                                <td class="wt"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </ion-slide>
+        </ion-slide-box>
+    </ion-content>
+</ion-view>

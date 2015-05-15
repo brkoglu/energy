@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','ui.router'])
 
   //.constant('ApiEndpoint', {
   //    url: 'http://localhost:8100/api'
@@ -40,6 +40,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'menuContent': {
         templateUrl: "templates/search.html"
+      }
+    }
+  })
+
+  .state('app.results', {
+    url: "/results",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/results.html",
+        controller: 'SearchResults'
       }
     }
   })

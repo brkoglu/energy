@@ -1,13 +1,10 @@
-angular.module('starter.controllers', ['angularSoap', 'starter.services'])
+angular.module('starter.controllers', ['angularSoap', 'starter.services','ui.router'])
 
     .factory("testService", ['$soap',function($soap){
       //var base_url = "https://white-webservices.energieoptimierer.de";
       var base_url = "http://localhost:8100/api";
 
       return {
-        HelloWorld: function(){
-          return $soap.post(base_url + "/SwitchEnergySupplier.asmx","ListGlobalSuppliers", {"energyType": "Gas"});
-        },
         ListDefaultSuppliers: function(yearlyUsage, plz,energyType , customerType, townName){
           return $soap.post(base_url + "/SwitchEnergySupplier.asmx","ListDefaultSuppliers",
               {
@@ -57,7 +54,28 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
       }
     }])
 
-    .controller('MainFormCtrl', function($scope, testService) {
+    .service('productService', function() {
+      var productList = [];
+
+      var addProduct = function(newObj) {
+        productList.push(newObj);
+      };
+
+      var getProducts = function(){
+        return productList;
+      };
+
+      return {
+        addProduct: addProduct,
+        getProducts: getProducts
+      };
+    })
+
+    .controller('SearchResults', function ($scope, productService) {
+      $scope.data = productService.getProducts();
+    })
+
+    .controller('MainFormCtrl', function($scope, testService, $state, productService) {
       $scope.plz = "";
       $scope.town = "";
       $scope.client = "Private";
@@ -81,7 +99,6 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
               $scope.getSearchResult();
 
               testService.ListDefaultSuppliers($scope.range.value.toString(), $scope.plz, "Gas",$scope.client, $scope.town).then(function(response){
-                console.log(response);
                 $scope.operators = response;
                 $scope.selectedCompany = response[0];
                 $scope.selectedTariff = response[0].Tariffs[0];
@@ -102,6 +119,10 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
         }
       };
 
+      $scope.clickSearch = function () {
+        $state.go('app.results');
+      };
+
       $scope.range= {
         min:0,
         max:5000,
@@ -115,18 +136,16 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
 
         if ($scope.plz.length == 5){
           testService.ListOfferedSuppliersWithDate($scope.range.value.toString(), $scope.plz, "Gas",$scope.client, $scope.town, $scope.date).then(function(response){
+            productService.addProduct(response);
             $scope.searchResultCountsText = "(" + response.length + " Treffer)";
             console.log(response);
           });
         }
 
       };
-
-
-
     })
 
-    .controller('BarCtrl', function($scope, testService) {
+    .controller('BarCtrl', function($scope) {
       $scope.active = '2500';
       $scope.setActive = function(type) {
         $scope.range.value = type;
@@ -143,21 +162,13 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services'])
         return input.split(splitChar)[splitIndex];
       }
     })
+
     .controller('WebserviceCtrl', function($scope, testService) {
       testService.ListOfferedSuppliers().then(function(response){
         console.log(response);
         $scope.data = response;
       });
 
-      //testService.ListDefaultSuppliers().then(function(response){
-      //  console.log(response);
-      //  $scope.data = response;
-      //});
-
-      //testService.HelloWorld().then(function(response){
-      //  console.log(response);
-      //  $scope.data = response;
-      //});
     })
 
 //angular.module('starter.controllers', [])

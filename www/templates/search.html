@@ -42,14 +42,14 @@
             </div>
           </label>
 
-          <div class="button-bar responsive-sm" ng-controller="BarCtrl" style="padding-left: 1%; padding-right: 1%;">
+          <div class="button-bar" ng-controller="BarCtrl">
             <button class="button" ng-class="{'button-positive': range.value > 500 && range.value <= 1500 }" ng-click="setActive('1500')"><i class="icon ion-ios-body"></i></button>
             <button class="button" ng-class="{'button-positive': range.value > 1500 && range.value <= 2500 }" ng-click="setActive('2500')"><i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i></button>
             <button class="button" ng-class="{'button-positive': range.value > 2500 && range.value <= 3500 }" ng-click="setActive('3500')"><i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i></button>
             <button class="button" ng-class="{'button-positive': range.value > 3500 && range.value <= 5000 }" ng-click="setActive('4500')"><i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i> <i class="icon ion-ios-body"></i></button>
           </div>
           <label class="item" style="padding-left: 15px; padding-right: 15px">
-            <button class="button button-block button-positive" type="submit">Suchen {{searchResultCountsText}}</button>
+            <button class="button button-block button-positive" ng-click="clickSearch()" type="submit">Suchen {{searchResultCountsText}}</button>
           </label>
         </div>
       </form>
