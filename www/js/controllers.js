@@ -54,28 +54,90 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services','ui.rou
       }
     }])
 
-    .service('productService', function() {
+    .service('productService', function($filter) {
       var productList = [];
+      var calculated = [];
+
+      var propertyObject = [];
+
 
       var addProduct = function(newObj) {
+        productList = [];
         productList.push(newObj);
+        console.log(productList)
+        calculatedProducts();
       };
 
       var getProducts = function(){
-        return productList;
+        console.log(calculated);
+        return calculated;
+
+      };
+
+      var addProperty = function(propName,newObj) {
+        propertyObject[propName] = newObj
+      };
+
+      var getProperty = function(propName){
+        return propertyObject[propName];
+      };
+
+      var calculatedProducts = function(){
+        calculated = [];
+        var _calculated = [];
+
+        angular.forEach(productList[0], function(value, key) {
+          if (value.Tariffs.length > 0)
+          {
+            var mainTariff = clone(value);
+            delete mainTariff["Tariffs"];
+
+            angular.forEach(value.Tariffs, function(tariff_value, tariff_key) {
+              //console.log(tariff_value.Name);
+              function getCostValues (tariff_value){
+                tariff_value.Cost["Grundpreis"] = parseFloat(tariff_value.Cost.BaseCost) / 12;
+                tariff_value.Cost["Arbeitspreis"] = (parseFloat(tariff_value.Cost.UnitCost) / propertyObject["range"]) * 100;
+                tariff_value.Cost["KostenJahr"] =  (parseFloat(tariff_value.Cost.UnitCost) +  parseFloat(tariff_value.Cost.BaseCost)) - parseFloat(tariff_value.Cost.TotalRabat);
+
+                return tariff_value;
+              }
+              //console.log(tariff_value.Name);
+
+              var singleTariffObject = clone(mainTariff);
+              singleTariffObject["TariffName"] = tariff_value.Name;
+
+              singleTariffObject["Tariff"] = getCostValues(tariff_value);
+
+              _calculated.push(singleTariffObject);
+            });
+          }
+          //for (var i = 0; i < _calculated.length; i++){
+          //  console.log(_calculated[i].TariffName);
+          //}
+        });
+
+        var temp = $filter('unique')(_calculated,"TariffName");
+        calculated = $filter('orderBy')(temp, "Tariff.Cost.KostenJahr", false);
+
+
       };
 
       return {
         addProduct: addProduct,
-        getProducts: getProducts
+        getProducts: getProducts,
+        addProperty: addProperty,
+        getProperty: getProperty
       };
     })
 
     .controller('SearchResults', function ($scope, productService) {
-      $scope.data = productService.getProducts();
+      $scope.resultData = productService.getProducts();
+      $scope.range = productService.getProperty("range");
+
     })
 
     .controller('MainFormCtrl', function($scope, testService, $state, productService) {
+
       $scope.plz = "";
       $scope.town = "";
       $scope.client = "Private";
@@ -109,11 +171,11 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services','ui.rou
                 });
 
               });
-
             }
           });
         }
-        else{
+        else
+        {
           $scope.loader = false;
           $scope.lbltown = false;
         }
@@ -136,24 +198,38 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services','ui.rou
 
         if ($scope.plz.length == 5){
           testService.ListOfferedSuppliersWithDate($scope.range.value.toString(), $scope.plz, "Gas",$scope.client, $scope.town, $scope.date).then(function(response){
+            productService.addProperty("range", $scope.range.value);
             productService.addProduct(response);
-            $scope.searchResultCountsText = "(" + response.length + " Treffer)";
-            console.log(response);
+
+            var resultData = productService.getProducts();
+            $scope.searchResultCountsText = "(" + resultData.length + " Treffer)";
+            //console.log($scope.resultData);
           });
         }
 
       };
     })
 
-    .controller('BarCtrl', function($scope) {
+    .controller('BarCtrl', function($scope, productService) {
       $scope.active = '2500';
       $scope.setActive = function(type) {
         $scope.range.value = type;
         $scope.active = type;
       };
+    })
 
-
-
+    .filter('unique', function() {
+      return function (arr, field) {
+        var o = {}, i, l = arr.length, r = [];
+        for(i=0; i<l;i+=1) {
+          o[arr[i][field]] = arr[i];
+          //console.log(arr[i][field] )
+        }
+        for(i in o) {
+          r.push(o[i]);
+        }
+        return r;
+      };
     })
 
     .filter('split', function() {
@@ -221,3 +297,11 @@ angular.module('starter.controllers', ['angularSoap', 'starter.services','ui.rou
 
 });
 
+function clone(obj) {
+  if (null == obj || "object" != typeof obj) return obj;
+  var copy = obj.constructor();
+  for (var attr in obj) {
+    if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+  }
+  return copy;
+}
